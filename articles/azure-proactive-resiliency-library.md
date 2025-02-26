@@ -3,7 +3,7 @@ title: "Azure Proactive Resiliency Libraryとは何か"
 emoji: "🛠️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Azure", "Resiliency"]
-published: false
+published: true
 publication_name: "azpower"
 ---
 
