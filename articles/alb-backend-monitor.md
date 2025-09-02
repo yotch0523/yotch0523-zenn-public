@@ -7,8 +7,6 @@ published: true
 publication_name: "azpower"
 ---
 
-# はじめに
-
 こんにちは、AZPower 株式会社のクラウドインテグレーション部に所属している wai です。
 
 Azure Load Balancer（ALB）とは、所謂 OSI 参照モデルのトランスポート層（L4）で動作する負荷分散サービスです。
@@ -19,7 +17,7 @@ https://learn.microsoft.com/ja-jp/azure/load-balancer/load-balancer-overview
 他の Azure リソースと同様に、当然 ALB も Azure Monitor ソリューションにより監視することができるのですが、具体的にどのバックエンドプールインスタンスにトラフィックがルーティングされたかまで把握することができるのはご存知でしょうか？
 これを利用すると、特定のマシンに対するトラフィックがある条件に達した際にアラートを発報する、といった構成が可能になりますので、そういったニーズに対応する必要がある方の参考になれば幸いです。
 
-# 前提条件
+## 前提条件
 
 今回の記事の前提条件は下記の通りです：
 
@@ -41,7 +39,7 @@ https://learn.microsoft.com/ja-jp/azure/load-balancer/load-balancer-overview
 
 続いてどのような構成が必要で、どのようなフォーマットで分析情報が取れるのかをこれから解説していきます。
 
-# 結論
+## 結論
 
 今回も時間がない方に向けて先にやるべきことを記載します：
 
@@ -52,9 +50,9 @@ https://learn.microsoft.com/ja-jp/azure/load-balancer/load-balancer-overview
 
 以降は、その詳細な手順について解説していきます。
 
-# 手順
+## 手順
 
-## 1. 仮想ネットワークフローログの作成
+### 1. 仮想ネットワークフローログの作成
 
 そもそも仮想ネットワークフローログとは、仮想ネットワークを通過するトラフィックに関するログを記録する機能です。
 
@@ -72,12 +70,13 @@ https://learn.microsoft.com/ja-jp/azure/network-watcher/vnet-flow-logs-overview
 
 ![image.png](/images/alb-backend-monitor/image2.png)
 
-### 1-1. 構成値：基本タブ
+#### 1-1. 構成値：基本タブ
 
 これより各種構成項目を埋めていきます。
 先に全ての構成項目とその値を下表に示します。
 
-**基本タブの構成項目**
+##### 基本タブの構成項目
+
 | 項目 | 構成値 |
 | ------------------ | ---------------------------------------------- |
 | サブスクリプション | 検証環境がデプロイされているサブスクリプション |
@@ -86,7 +85,8 @@ https://learn.microsoft.com/ja-jp/azure/network-watcher/vnet-flow-logs-overview
 | ストレージアカウント | 分析情報の記録に利用できる適当な Storage Account |
 | リテンション期間 | 適当な値、本検証では 30 日としています |
 
-**ターゲットリソース選択画面の構成項目**
+##### ターゲットリソース選択画面の構成項目
+
 | 項目 | 構成値 |
 | -- | -- |
 | 仮想ネットワークを選択します | vnet-main |
@@ -104,16 +104,18 @@ _基本タブ：ストレージアカウント、リテンション期間_
 
 仮想ネットワークフローログは Storage Account に対して出力されます。
 この出力先として指定するにはいくつか条件がありますので、下記のドキュメントを参考にしてください。
+
 https://learn.microsoft.com/ja-jp/azure/network-watcher/vnet-flow-logs-overview#considerations-for-virtual-network-flow-logs
 
 実はこの構成だけでも欲しい情報を取得することはできるのですが、分析を行うには少々使い勝手が悪いので次の分析タブの構成を実施します。
 
-### 1-2. 構成値：分析タブ
+#### 1-2. 構成値：分析タブ
 
 続いて分析に関する構成を行います。
 まず、構成項目の一覧を下表に示します。
 
-**分析タブの構成項目**
+##### 分析タブの構成項目
+
 | 項目 | 構成値 |
 | ------------------ | ---------------------------------------------- |
 | Traffic Analytics を有効にする | チェック |
@@ -134,7 +136,7 @@ https://learn.microsoft.com/ja-jp/azure/network-watcher/traffic-analytics?tabs=A
 以上で必要な構成は完了です。（「**_タグ_**」タブでは任意の設定を行ってください）
 「**_確認と作成_**」タブにて構成値を確認後、仮想ネットワークフローログを作成してください。
 
-## 2. クエリ
+### 2. クエリ
 
 全ての構成を実施後、ALB のパブリック IP アドレスに向けて 80 番ポートで何度かアクセスしてください。
 すると、しばらくした後に Log Analytics ワークスペースに**_NTANetAnalytics_**テーブルが作成されるため、そのテーブルに対しクエリを投げます。
@@ -161,7 +163,7 @@ DestVm を見ると、vm-app1、vm-app2 のどちらにルーティングされ�
 余談ですが、リクエスト元から先へのパケット数、バイト数といったデータも格納されています。
 アラートに使えそうなデータがないか調べてみると楽しいと思います。
 
-# おわりに
+## おわりに
 
 以上が本記事の内容です。
 冒頭でも触れましたが、今回の構成は特定のバックエンドプールインスタンスへのトラフィックの動向を把握し、必要に応じてアラートやさらなる対策を講じる上で有効です。また、Traffic Analytics を活用することで、ネットワーク全体のトラフィックパターンを俯瞰し、さらなる最適化の可能性を模索することもできます。
@@ -169,6 +171,6 @@ DestVm を見ると、vm-app1、vm-app2 のどちらにルーティングされ�
 恒例でマサカリ大歓迎です。
 ではでは。
 
-# 参考記事
+## 参考記事
 
-https://learn.microsoft.com/ja-jp/azure/load-balancer/monitor-load-balancer
+[Azure Load Balancer を監視する](https://learn.microsoft.com/ja-jp/azure/load-balancer/monitor-load-balancer)
