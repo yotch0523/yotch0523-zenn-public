@@ -30,7 +30,8 @@ https://learn.microsoft.com/ja-jp/azure/load-balancer/load-balancer-overview
 | 仮想マシン１        | D2s_v5      | vm-app1    | IIS がインストールされたシンプルな AP サーバー           |
 | 仮想マシン 2        | D2s_v5      | vm-app2    | IIS がインストールされたシンプルな AP サーバー           |
 
-![zenn_alb_architecture.png](/images/alb-backend-monitor/zenn_alb_architecture.png)
+![zenn_alb_architecture.png](/images/alb-backend-monitor/image001.png)
+_検証環境アーキテクチャ_
 
 - ALB には、パブリック IP の 80 番ポートへの受信トラフィックを、default サブネット内にある 2 つの VM に負荷分散するよう設定された負荷分散規則が構成されている
 - 東日本リージョンに Log Analytics ワークスペースが既にデプロイされている
@@ -60,15 +61,15 @@ https://learn.microsoft.com/ja-jp/azure/network-watcher/vnet-flow-logs-overview
 
 本機能は Azure Network Watcher の機能の一つであるため、まずは Azure ポータルから「**_Network Watcher_**」を検索し、クリックしてください。
 
-![image.png](/images/alb-backend-monitor/image.png)
+![image.png](/images/alb-backend-monitor/image002.png)
 
 すると、サイドバーに「**_フローログ_**」メニューがあるため、そちらクリック。
 
-![image.png](/images/alb-backend-monitor/image1.png)
+![image.png](/images/alb-backend-monitor/image003.png)
 
 お馴染みの位置に「**_作成_**」ボタンがあるためそちらをクリック。
 
-![image.png](/images/alb-backend-monitor/image2.png)
+![image.png](/images/alb-backend-monitor/image004.png)
 
 #### 1-1. 構成値：基本タブ
 
@@ -77,29 +78,29 @@ https://learn.microsoft.com/ja-jp/azure/network-watcher/vnet-flow-logs-overview
 
 ##### 基本タブの構成項目
 
-| 項目 | 構成値 |
-| ------------------ | ---------------------------------------------- |
-| サブスクリプション | 検証環境がデプロイされているサブスクリプション |
-| フローログのタイプ | 仮想ネットワーク |
-| ターゲットリソースの選択 | 仮想ネットワーク |
-| ストレージアカウント | 分析情報の記録に利用できる適当な Storage Account |
-| リテンション期間 | 適当な値、本検証では 30 日としています |
+| 項目                     | 構成値                                           |
+| ------------------------ | ------------------------------------------------ |
+| サブスクリプション       | 検証環境がデプロイされているサブスクリプション   |
+| フローログのタイプ       | 仮想ネットワーク                                 |
+| ターゲットリソースの選択 | 仮想ネットワーク                                 |
+| ストレージアカウント     | 分析情報の記録に利用できる適当な Storage Account |
+| リテンション期間         | 適当な値、本検証では 30 日としています           |
 
 ##### ターゲットリソース選択画面の構成項目
 
-| 項目 | 構成値 |
-| -- | -- |
+| 項目                         | 構成値    |
+| ---------------------------- | --------- |
 | 仮想ネットワークを選択します | vnet-main |
 
 ※「仮想ネットワークを選択します」画面は、基本タブにて「ターゲットリソースの選択」で「仮想ネットワーク」を選択すると起動されます。
 
-![image.png](/images/alb-backend-monitor/image3.png)
+![image.png](/images/alb-backend-monitor/image005.png)
 _基本タブ：サブスクリプション、フローログのタイプ、ターゲットリソースのタイプ_
 
-![image.png](/images/alb-backend-monitor/image4.png)
+![image.png](/images/alb-backend-monitor/image006.png)
 _基本タブ > ターゲットリソース：ネットワークフローログを適用する仮想ネットワークを選択する_
 
-![image.png](/images/alb-backend-monitor/image5.png)
+![image.png](/images/alb-backend-monitor/image007.png)
 _基本タブ：ストレージアカウント、リテンション期間_
 
 仮想ネットワークフローログは Storage Account に対して出力されます。
@@ -116,14 +117,14 @@ https://learn.microsoft.com/ja-jp/azure/network-watcher/vnet-flow-logs-overview#
 
 ##### 分析タブの構成項目
 
-| 項目 | 構成値 |
-| ------------------ | ---------------------------------------------- |
-| Traffic Analytics を有効にする | チェック |
-| Traffic Analytics の処理間隔 | 10 分ごと |
-| サブスクリプション | 検証環境がデプロイされているサブスクリプション |
-| Log Analytics ワークスペース | 前提条件記載の Log Analytics ワークスペース |
+| 項目                           | 構成値                                         |
+| ------------------------------ | ---------------------------------------------- |
+| Traffic Analytics を有効にする | チェック                                       |
+| Traffic Analytics の処理間隔   | 10 分ごと                                      |
+| サブスクリプション             | 検証環境がデプロイされているサブスクリプション |
+| Log Analytics ワークスペース   | 前提条件記載の Log Analytics ワークスペース    |
 
-![image.png](/images/alb-backend-monitor/image6.png)
+![image.png](/images/alb-backend-monitor/image008.png)
 
 ここでの最大のポイントは **_Traffic Analytics_** の有効化です。
 
@@ -141,7 +142,7 @@ https://learn.microsoft.com/ja-jp/azure/network-watcher/traffic-analytics?tabs=A
 全ての構成を実施後、ALB のパブリック IP アドレスに向けて 80 番ポートで何度かアクセスしてください。
 すると、しばらくした後に Log Analytics ワークスペースに**_NTANetAnalytics_**テーブルが作成されるため、そのテーブルに対しクエリを投げます。
 
-![image.png](/images/alb-backend-monitor/image7.png)
+![image.png](/images/alb-backend-monitor/image009.png)
 
 今回は下記のように、 DestLoadBalancer に対象の ALB のリソース名の文字列を含むものでフィルタする Kusto クエリを実行しました。
 
@@ -150,15 +151,15 @@ NTANetAnalytics
 | where DestLoadBalancer contains "lb-main"
 ```
 
-![image.png](/images/alb-backend-monitor/image8.png)
+![image.png](/images/alb-backend-monitor/image010.png)
 
 すると上キャプチャのようにクエリ結果が出てきますが、少し右にスクロールすると Dest\*\*\*といったルーティング先に関する情報を格納したカラムが見えてきます。
 
-![image.png](/images/alb-backend-monitor/image9.png)
+![image.png](/images/alb-backend-monitor/image011.png)
 
 DestVm を見ると、vm-app1、vm-app2 のどちらにルーティングされたのか一目瞭然ですね。目的は達成されました。
 
-![image.png](/images/alb-backend-monitor/image10.png)
+![image.png](/images/alb-backend-monitor/image012.png)
 
 余談ですが、リクエスト元から先へのパケット数、バイト数といったデータも格納されています。
 アラートに使えそうなデータがないか調べてみると楽しいと思います。
