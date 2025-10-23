@@ -7,7 +7,7 @@ yarn@^1.22.22:
   resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.22.tgz#ac34549e6aa8e7ead463a7407e1c7390f61a6610"
   integrity sha512-prL3kGtyG7o9Z9Sv8IPfBNrWTDmXB4Qbes8A9rEzt6wkJV8mUvoirjU0Mp3GGAU06Y0XQyA3/2/RQFVuK7MTfg==
 
-zenn-cli@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/zenn-cli/-/zenn-cli-0.2.3.tgz#1332e1452e8cfc9eeb289ca2c637fb08ad1c2b99"
-  integrity sha512-ghYpg2foOeFExvtWKDFSjCsq+utYf84jApw37Wli1MnSAE1la40GZ47kXQDQKeh/1LV2AT0LDMYWbmE64Z4ZSg==
+zenn-cli@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/zenn-cli/-/zenn-cli-0.2.7.tgz#7b34b853b8596a34b89e65b43c4a5b7aa28d67b3"
+  integrity sha512-IUR1RSUHOPpVoT5IBmINZQrbzpHwHYmmlnCnOjsqFt6tUpgNJFxMc91iUpeqrIbhvHQ5AAsy+TqXEEsMhs3dlA==
