@@ -3,7 +3,8 @@ title: "【Azure】仮想マシンのデプロイ制限を調べる方法"
 emoji: "🔍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Azure", "Microsoft", "Bash", "PowerShell", "CLI"]
-published: false
+published: true
+publication_name: "azpower"
 ---
 
 こんにちは、AZPower 株式会社のクラウドインテグレーション部に所属している wai です。
